@@ -30,6 +30,15 @@ export default class Playlist {
     }
 
     /**
+     * Accessor for getting all the songs from this playlist.
+     * 
+     * @returns The songs from this playlist.
+     */
+    getSongs() {
+        return this.songs;
+    }
+
+    /**
      * Accessor for getting the song at index in the playlist nothing that the first song
      * in the playlist is at index 0.
      * 

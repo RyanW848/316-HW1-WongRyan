@@ -142,6 +142,18 @@ export default class PlaylisterController {
             deleteListModal.classList.add("is-visible");
             this.model.toggleConfirmDialogOpen();
         }
+        // HANDLES DUPLICATING A PLAYLIST
+        document.getElementById("duplicate-list-button-" + id).onmousedown = (event) => {
+            // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
+            this.ignoreParentClick(event);
+
+            this.listToDuplicateIndex = this.model.getListIndex(id);
+            let listToDuplicate = this.model.getList(this.listToDuplicateIndex);
+            let listName = listToDuplicate.getName();
+            let listSongs = listToDuplicate.getSongs();
+
+            this.model.addNewList(listName + " (Copy)", listSongs);
+        }
         // FOR RENAMING THE LIST NAME
         document.getElementById("playlist-card-" + id).ondblclick = (event) => {
             let text = document.getElementById("playlist-card-text-" + id)

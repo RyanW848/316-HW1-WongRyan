@@ -61,6 +61,24 @@ export default class PlaylisterController {
      * are pressed in the three modals.
      */
     registerModalHandlers() {
+        // RESPOND TO THE USER CONFIRMING THE EDIT SONG MODAL
+        document.getElementById("edit-song-confirm-button").onclick = (event) => {
+            // ALLOW OTHER INTERACTIONS
+            this.model.toggleConfirmDialogOpen();
+
+            let songIndex = this.model.getEditSongIndex();
+            let song = this.model.getSong(songIndex);
+
+            song.title = document.getElementById("edit-song-modal-title-textfield").value;
+            song.artist = document.getElementById("edit-song-modal-artist-textfield").value;
+            song.youTubeId = document.getElementById("edit-song-modal-youTubeId-textfield").value;
+            song.year = document.getElementById("edit-song-modal-year-textfield").value;
+
+            // CLOSE THE MODAL
+            let editSongModal = document.getElementById("edit-song-modal");
+            editSongModal.classList.remove("is-visible");
+        }
+
         // RESPOND TO THE USER CLOSING THE EDIT SONG MODAL VIA THE CANCEL BUTTON
         document.getElementById("edit-song-cancel-button").onclick = (event) => {
             // ALLOW OTHER INTERACTIONS
@@ -211,6 +229,7 @@ export default class PlaylisterController {
                 document.getElementById("edit-song-modal-title-textfield").value = song.title;
                 document.getElementById("edit-song-modal-artist-textfield").value = song.artist;
                 document.getElementById("edit-song-modal-youTubeId-textfield").value = song.youTubeId;
+                document.getElementById("edit-song-modal-year-textfield").value = song.year;
 
                 // OPEN UP THE MODAL
                 let editSongModal = document.getElementById("edit-song-modal");

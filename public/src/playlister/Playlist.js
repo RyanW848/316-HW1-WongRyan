@@ -30,6 +30,15 @@ export default class Playlist {
     }
 
     /**
+     * Accessor for getting the ID of this playlist.
+     * 
+     * @returns The ID of this playlist.
+     */
+    getId() {
+        return this.id;
+    }
+
+    /**
      * Accessor for getting all the songs from this playlist.
      * 
      * @returns The songs from this playlist.

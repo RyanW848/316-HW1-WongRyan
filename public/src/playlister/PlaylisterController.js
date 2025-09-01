@@ -170,7 +170,11 @@ export default class PlaylisterController {
             let listName = listToDuplicate.getName();
             let listSongs = listToDuplicate.getSongs();
 
-            this.model.addNewList(listName + " (Copy)", listSongs);
+            let dupedList = this.model.addNewList(listName + " (Copy)", listSongs);
+
+            // SELECT THE NEW DUPED LIST
+            this.model.unselectCurrentList();
+            this.model.loadList(dupedList.getId());
         }
         // FOR RENAMING THE LIST NAME
         document.getElementById("playlist-card-" + id).ondblclick = (event) => {

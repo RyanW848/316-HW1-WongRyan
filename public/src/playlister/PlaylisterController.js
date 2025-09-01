@@ -33,6 +33,10 @@ export default class PlaylisterController {
      * Specifies event handlers for buttons in the toolbar.
      */
     registerEditToolbarHandlers() {
+        // HANDLER FOR ADDING A NEW PLAYLIST BUTTON
+        document.getElementById("add-playlist-button").onmousedown = (event) => {
+            this.model.addNewList("Untitled", []);
+        }
         // HANDLER FOR ADDING A NEW SONG BUTTON
         document.getElementById("add-song-button").onmousedown = (event) => {
             this.model.addTransactionToCreateSong();

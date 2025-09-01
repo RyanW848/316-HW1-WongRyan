@@ -123,6 +123,7 @@ export default class PlaylisterView {
 
     /**
      * The application's UI starts with the editing buttons disabled.
+     * Except for the Add Playlist button 
      */
     init() {
         this.disableButton('add-song-button');

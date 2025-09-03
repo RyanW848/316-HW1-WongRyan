@@ -63,7 +63,7 @@ export default class PlaylisterView {
         songCard.id = "song-card-" + id;
 
         songCard.querySelector("span").id += id;
-        songCard.querySelector("span").textContent = id;
+        songCard.querySelector("span").textContent = id + '.';
         
         songCard.querySelector("a").id += id;
         songCard.querySelector("a").href = "https://www.youtube.com/watch?v=" + song.youTubeId;

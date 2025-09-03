@@ -62,8 +62,7 @@ export default class PlaylisterController {
      */
     registerModalHandlers() {
         // RESPOND TO THE USER CONFIRMING THE EDIT SONG MODAL
-        document.getElementById("edit-song-confirm-button").onclick = (event) => {
-            // ALLOW OTHER INTERACTIONS
+        const confirmModal = () => {
             this.model.toggleConfirmDialogOpen();
 
             let songIndex = this.model.getEditSongIndex();
@@ -77,7 +76,18 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let editSongModal = document.getElementById("edit-song-modal");
             editSongModal.classList.remove("is-visible");
-        }
+        };
+
+        document.getElementById("edit-song-confirm-button").onclick = (event) => {
+            confirmModal();
+        };
+
+        document.getElementById("edit-song-modal").onkeydown = (event) => {
+            if (event.key === "Enter") {
+                confirmModal();
+            }
+        };
+
 
         // RESPOND TO THE USER CLOSING THE EDIT SONG MODAL VIA THE CANCEL BUTTON
         document.getElementById("edit-song-cancel-button").onclick = (event) => {

@@ -54,6 +54,33 @@ export default class PlaylisterView {
         this.controller.registerPlaylistCardHandlers(newList.id);
     }
 
+    appendSongToView(song, index) {
+        // EACH CARD WILL HAVE A UNIQUE ID
+        let id = index + 1;
+
+        // MAKE A DEEP COPY OF THE PROTOTYPE FOR OUR NEW PLAYLIST CARD
+        let songCard = document.getElementById("song-card-prototype").cloneNode(true);
+        songCard.id = "song-card-" + id;
+
+        songCard.querySelector("span").id += id;
+        songCard.querySelector("span").textContent = id;
+        
+        songCard.querySelector("a").id += id;
+        songCard.querySelector("a").href = "https://www.youtube.com/watch?v=" + song.youTubeId;
+        songCard.querySelector("a").textContent = song.title;
+
+        songCard.querySelector('span[id^="song-card-artist-"]').id += id;
+        songCard.querySelector('span[id^="song-card-artist-"]').textContent = song.artist;
+
+        // this is index not id for some reason
+        songCard.querySelector('input[id^="remove-song-"]').id += index;
+
+        songCard.hidden = false;
+
+        let songsElement = document.getElementById("song-cards");
+        songsElement.appendChild(songCard);
+    }
+
     /**
      * This removes all the songs from UI workspace, which should be
      * done whenever a list is closed.
@@ -159,56 +186,68 @@ export default class PlaylisterView {
      * @param {Playlist} playlist The playlist whose songs are to be reshown.
      */
     refreshSongCards(playlist) {
-        // CLEAR OUT THE OLD SONG CARDS
         let itemsDiv = document.getElementById("song-cards");
         itemsDiv.innerHTML = "";
-
-        // FOR EACH SONG
+        
         for (let i = 0; i < playlist.songs.length; i++) {
-            // MAKE AN ITEM (i.e. CARD)
-            let song = playlist.getSongAt(i);
-            let itemDiv = document.createElement("div");
-            itemDiv.classList.add("song-card");
-            itemDiv.classList.add("unselected-song-card");
-            itemDiv.id = "song-card-" + (i + 1);
-
-            // HAVE THE TEXT LINK TO THE YOUTUBE VIDEO
-            let youTubeLink = document.createElement("a");
-            youTubeLink.classList.add("song-card-title");
-            youTubeLink.href = "https://www.youtube.com/watch?v=" + song.youTubeId;
-            youTubeLink.target = 1;
-            youTubeLink.innerHTML = song.title;
-
-            let bySpan = document.createElement("span");
-            bySpan.class = "song-card-by";
-            bySpan.innerHTML = " by ";
-
-            let artistSpan = document.createElement("span");
-            artistSpan.class = "song-card-artist";
-            artistSpan.innerHTML = song.artist;
-
-            // PUT THE CONTENT INTO THE CARD
-            let songNumber = document.createTextNode("" + (i + 1) + ". ");
-            itemDiv.appendChild(songNumber);
-            itemDiv.appendChild(youTubeLink);
-            itemDiv.appendChild(bySpan);
-            itemDiv.appendChild(artistSpan);
-
-            // MAKE THE DELETE LIST BUTTON
-            let deleteButton = document.createElement("input");
-            deleteButton.setAttribute("type", "button");
-            deleteButton.setAttribute("id", "remove-song-" + i);
-            deleteButton.setAttribute("class", "song-card-button");
-            deleteButton.setAttribute("value", "\u2715");
-            itemDiv.appendChild(deleteButton);
-
-            // AND PUT THE CARD INTO THE UI
-            itemsDiv.appendChild(itemDiv);
+            let song = playlist.songs[i];
+            this.appendSongToView(song, i);
         }
-        // NOW THAT THE CONTROLS EXIST WE CAN REGISTER EVENT
-        // HANDLERS FOR THEM
+
         this.controller.registerSongCardHandlers();
     }
+
+    // refreshSongCards(playlist) {
+    //     // CLEAR OUT THE OLD SONG CARDS
+    //     let itemsDiv = document.getElementById("song-cards");
+    //     itemsDiv.innerHTML = "";
+
+    //     // FOR EACH SONG
+    //     for (let i = 0; i < playlist.songs.length; i++) {
+    //         // MAKE AN ITEM (i.e. CARD)
+    //         let song = playlist.getSongAt(i);
+    //         let itemDiv = document.createElement("div");
+    //         itemDiv.classList.add("song-card");
+    //         itemDiv.classList.add("unselected-song-card");
+    //         itemDiv.id = "song-card-" + (i + 1);
+
+    //         // HAVE THE TEXT LINK TO THE YOUTUBE VIDEO
+    //         let youTubeLink = document.createElement("a");
+    //         youTubeLink.classList.add("song-card-title");
+    //         youTubeLink.href = "https://www.youtube.com/watch?v=" + song.youTubeId;
+    //         youTubeLink.target = 1;
+    //         youTubeLink.innerHTML = song.title;
+
+    //         let bySpan = document.createElement("span");
+    //         bySpan.class = "song-card-by";
+    //         bySpan.innerHTML = " by ";
+
+    //         let artistSpan = document.createElement("span");
+    //         artistSpan.class = "song-card-artist";
+    //         artistSpan.innerHTML = song.artist;
+
+    //         // PUT THE CONTENT INTO THE CARD
+    //         let songNumber = document.createTextNode("" + (i + 1) + ". ");
+    //         itemDiv.appendChild(songNumber);
+    //         itemDiv.appendChild(youTubeLink);
+    //         itemDiv.appendChild(bySpan);
+    //         itemDiv.appendChild(artistSpan);
+
+    //         // MAKE THE DELETE LIST BUTTON
+    //         let deleteButton = document.createElement("input");
+    //         deleteButton.setAttribute("type", "button");
+    //         deleteButton.setAttribute("id", "remove-song-" + i);
+    //         deleteButton.setAttribute("class", "song-card-button");
+    //         deleteButton.setAttribute("value", "\u2715");
+    //         itemDiv.appendChild(deleteButton);
+
+    //         // AND PUT THE CARD INTO THE UI
+    //         itemsDiv.appendChild(itemDiv);
+    //     }
+    //     // NOW THAT THE CONTROLS EXIST WE CAN REGISTER EVENT
+    //     // HANDLERS FOR THEM
+    //     this.controller.registerSongCardHandlers();
+    // }
 
     /**
      * When UI controls are dynamically created by this object they may need

@@ -235,7 +235,7 @@ export default class PlaylisterController {
                 this.ignoreParentClick(event);
 
                 // WE NEED TO RECORD THE INDEX FOR THE MODAL
-                let songIndex = Number.parseInt(event.target.id.split("-")[2]) - 1;
+                let songIndex = Number.parseInt(event.currentTarget.id.split("-")[2]) - 1;
                 this.model.setEditSongIndex(songIndex);
                 let song = this.model.getSong(songIndex);
 

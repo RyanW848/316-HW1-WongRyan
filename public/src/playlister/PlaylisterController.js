@@ -62,9 +62,7 @@ export default class PlaylisterController {
      */
     registerModalHandlers() {
         // RESPOND TO THE USER CONFIRMING THE EDIT SONG MODAL
-        const confirmModal = () => {
-            this.model.toggleConfirmDialogOpen();
-
+        const confirmEditModal = () => {
             let songIndex = this.model.getEditSongIndex();
             let song = this.model.getSong(songIndex);
 
@@ -73,21 +71,23 @@ export default class PlaylisterController {
             song.youTubeId = document.getElementById("edit-song-modal-youTubeId-textfield").value;
             song.year = document.getElementById("edit-song-modal-year-textfield").value;
 
+            // ALLOW OTHER INTERACTIONS
+            this.model.toggleConfirmDialogOpen();
+
             // CLOSE THE MODAL
             let editSongModal = document.getElementById("edit-song-modal");
             editSongModal.classList.remove("is-visible");
         };
 
         document.getElementById("edit-song-confirm-button").onclick = (event) => {
-            confirmModal();
+            confirmEditModal();
         };
 
         document.getElementById("edit-song-modal").onkeydown = (event) => {
             if (event.key === "Enter") {
-                confirmModal();
+                confirmEditModal();
             }
         };
-
 
         // RESPOND TO THE USER CLOSING THE EDIT SONG MODAL VIA THE CANCEL BUTTON
         document.getElementById("edit-song-cancel-button").onclick = (event) => {
@@ -125,6 +125,26 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let deleteListModal = document.getElementById("delete-list-modal");
             deleteListModal.classList.remove("is-visible");
+        }
+
+        document.getElementById("remove-song-confirm-button").onclick = (event) => {
+            this.model.addTransactionToRemoveSong(this.model.getRemoveSongId());
+            
+            // ALLOW OTHER INTERACTIONS
+            this.model.toggleConfirmDialogOpen();
+
+            // CLOSE THE MODAL
+            let removeSongModal = document.getElementById("remove-song-modal");
+            removeSongModal.classList.remove("is-visible");
+        }
+
+        document.getElementById("remove-song-cancel-button").onclick = (event) => {
+            // ALLOW OTHER INTERACTIONS
+            this.model.toggleConfirmDialogOpen();
+
+            // CLOSE THE MODAL
+            let removeSongModal = document.getElementById("remove-song-modal");
+            removeSongModal.classList.remove("is-visible");
         }
     }
 
@@ -260,10 +280,18 @@ export default class PlaylisterController {
                 this.ignoreParentClick(event);
 
                 // RECORD WHICH SONG SO THE MODAL KNOWS AND UPDATE THE MODAL TEXT
-                let songIndex = Number.parseInt(event.target.id.split("-")[2]);               
+                let songIndex = Number.parseInt(event.target.id.split("-")[2]);  
+                this.model.setRemoveSongId(songIndex);
 
-                // PROCESS THE REMOVE SONG EVENT
-                this.model.addTransactionToRemoveSong(songIndex);
+                let songName = this.model.getSong(songIndex).title;
+
+                let removeSpan = document.getElementById("remove-song-span");
+                removeSpan.innerHTML = "";
+                removeSpan.appendChild(document.createTextNode(songName));
+
+                let removeSongModal = document.getElementById("remove-song-modal");
+                removeSongModal.classList.add("is-visible");
+                this.model.toggleConfirmDialogOpen();
             }
 
             // NOW SETUP ALL CARD DRAGGING HANDLERS AS THE USER MAY WISH TO CHANGE

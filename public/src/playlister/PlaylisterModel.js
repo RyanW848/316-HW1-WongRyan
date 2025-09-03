@@ -171,6 +171,10 @@ export default class PlaylisterModel {
         return this.deleteListId;
     }
 
+    getRemoveSongId() {
+        return this.removeSongId;
+    }
+
     /**
      * Accessor method for getting the index of the list with id
      * 
@@ -417,6 +421,10 @@ export default class PlaylisterModel {
      */
     setDeleteListId(initId) {
         this.deleteListId = initId;
+    }
+
+    setRemoveSongId(initId) {
+        this.removeSongId = initId;
     }
 
     /**

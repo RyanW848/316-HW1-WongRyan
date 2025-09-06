@@ -69,6 +69,9 @@ export default class PlaylisterView {
         songCard.querySelector("a").href = "https://www.youtube.com/watch?v=" + song.youTubeId;
         songCard.querySelector("a").textContent = song.title;
 
+        songCard.querySelector('span[id^="song-card-year-"]').id += id;
+        songCard.querySelector('span[id^="song-card-year-"]').textContent = " (" + song.year + ") ";
+
         songCard.querySelector('span[id^="song-card-artist-"]').id += id;
         songCard.querySelector('span[id^="song-card-artist-"]').textContent = song.artist;
 
@@ -121,7 +124,7 @@ export default class PlaylisterView {
      * 
      * @param {number} id The id of the button control to enable.
      */
-   enableButton(id) {
+    enableButton(id) {
         let button = document.getElementById(id);
         button.classList.remove("disabled");
         button.disabled = false;

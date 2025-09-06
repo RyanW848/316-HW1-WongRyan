@@ -17,11 +17,11 @@ export default class PlaylistSongPrototype {
      * @param {string} initYouTubeId The YouTube id for the song as it would appear in a link.
      * @param {string} initYear The song year.
      */
-    constructor(initTitle, initArtist, initYouTubeId, initYear) {
+    constructor(initTitle, initArtist, initYear, initYouTubeId) {
         this.title = initTitle;
         this.artist = initArtist;
-        this.youTubeId = initYouTubeId;
         this.year = initYear;
+        this.youTubeId = initYouTubeId;
     }
 
     /**

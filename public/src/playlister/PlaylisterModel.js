@@ -356,6 +356,10 @@ export default class PlaylisterModel {
         }
     }
 
+    refreshSongs(id) {
+        this.view.refreshSongCards(this.getPlaylist(id));
+    }
+
     /**
      * Removes the song at index from the currently loaded playlist
      * 

@@ -71,6 +71,9 @@ export default class PlaylisterController {
             song.youTubeId = document.getElementById("edit-song-modal-youTubeId-textfield").value;
             song.year = document.getElementById("edit-song-modal-year-textfield").value;
 
+            this.model.view.refreshSongCards(this.model.currentList);
+            this.model.saveLists();
+
             // ALLOW OTHER INTERACTIONS
             this.model.toggleConfirmDialogOpen();
 

@@ -1,10 +1,10 @@
 /**
  * This class provides responses for all user interface interactions.
- * 
+ *
  * @author McKilla Gorilla
  */
 export default class PlaylisterController {
-    constructor() { }
+    constructor() {}
 
     /**
      * This function makes sure the event doesn't get propogated to other controls.
@@ -36,24 +36,24 @@ export default class PlaylisterController {
         // HANDLER FOR ADDING A NEW PLAYLIST BUTTON
         document.getElementById("add-playlist-button").onmousedown = (event) => {
             this.model.addNewList("Untitled", []);
-        }
+        };
         // HANDLER FOR ADDING A NEW SONG BUTTON
         document.getElementById("add-song-button").onmousedown = (event) => {
             this.model.addTransactionToCreateSong();
-        }
+        };
         // HANDLER FOR UNDO BUTTON
         document.getElementById("undo-button").onmousedown = (event) => {
             this.model.undo();
-        }
+        };
         // HANDLER FOR REDO BUTTON
         document.getElementById("redo-button").onmousedown = (event) => {
             this.model.redo();
-        }
+        };
         // HANDLER FOR CLOSE LIST BUTTON
         document.getElementById("close-button").onmousedown = (event) => {
-           // this.model.unselectAll();
+            // this.model.unselectAll();
             this.model.unselectCurrentList();
-        }
+        };
     }
 
     /**
@@ -62,17 +62,26 @@ export default class PlaylisterController {
      */
     registerModalHandlers() {
         // RESPOND TO THE USER CONFIRMING THE EDIT SONG MODAL
+        
         const confirmEditModal = () => {
             let songIndex = this.model.getEditSongIndex();
             let song = this.model.getSong(songIndex);
 
-            song.title = document.getElementById("edit-song-modal-title-textfield").value;
-            song.artist = document.getElementById("edit-song-modal-artist-textfield").value;
-            song.youTubeId = document.getElementById("edit-song-modal-youTubeId-textfield").value;
-            song.year = document.getElementById("edit-song-modal-year-textfield").value;
+            let oldData = {
+                title: song.title,
+                artist: song.artist,
+                year: song.year,
+                youTubeId: song.youTubeId,
+            };
 
-            this.model.view.refreshSongCards(this.model.currentList);
-            this.model.saveLists();
+            let newData = {
+                title: document.getElementById("edit-song-modal-title-textfield").value,
+                artist: document.getElementById("edit-song-modal-artist-textfield").value,
+                year: document.getElementById("edit-song-modal-year-textfield").value,
+                youTubeId: document.getElementById("edit-song-modal-youTubeId-textfield").value,
+            };
+
+            this.model.addTransactionToEditSong(songIndex, oldData, newData);
 
             // ALLOW OTHER INTERACTIONS
             this.model.toggleConfirmDialogOpen();
@@ -89,7 +98,7 @@ export default class PlaylisterController {
         document.getElementById("edit-song-modal").onkeydown = (event) => {
             if (event.key === "Enter") {
                 confirmEditModal();
-            }
+            };
         };
 
         // RESPOND TO THE USER CLOSING THE EDIT SONG MODAL VIA THE CANCEL BUTTON
@@ -100,7 +109,7 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let editSongModal = document.getElementById("edit-song-modal");
             editSongModal.classList.remove("is-visible");
-        }
+        };
 
         // RESPOND TO THE USER CONFIRMING TO DELETE A PLAYLIST
         document.getElementById("delete-list-confirm-button").onclick = (event) => {
@@ -118,7 +127,7 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let deleteListModal = document.getElementById("delete-list-modal");
             deleteListModal.classList.remove("is-visible");
-        }
+        };
 
         // RESPOND TO THE USER CLOSING THE DELETE PLAYLIST MODAL
         document.getElementById("delete-list-cancel-button").onclick = (event) => {
@@ -128,18 +137,18 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let deleteListModal = document.getElementById("delete-list-modal");
             deleteListModal.classList.remove("is-visible");
-        }
+        };
 
         document.getElementById("remove-song-confirm-button").onclick = (event) => {
             this.model.addTransactionToRemoveSong(this.model.getRemoveSongId());
-            
+
             // ALLOW OTHER INTERACTIONS
             this.model.toggleConfirmDialogOpen();
 
             // CLOSE THE MODAL
             let removeSongModal = document.getElementById("remove-song-modal");
             removeSongModal.classList.remove("is-visible");
-        }
+        };
 
         document.getElementById("remove-song-cancel-button").onclick = (event) => {
             // ALLOW OTHER INTERACTIONS
@@ -148,7 +157,7 @@ export default class PlaylisterController {
             // CLOSE THE MODAL
             let removeSongModal = document.getElementById("remove-song-modal");
             removeSongModal.classList.remove("is-visible");
-        }
+        };
     }
 
     /**
@@ -159,7 +168,7 @@ export default class PlaylisterController {
      * are playlists, and users can add new playlists and delete playlists.
      * Note that the id provided must be the id of the playlist for which
      * to register event handling.
-    */
+     */
     registerPlaylistCardHandlers(id) {
         // HANDLES SELECTING A PLAYLIST
         document.getElementById("playlist-card-" + id).onmousedown = (event) => {
@@ -170,7 +179,7 @@ export default class PlaylisterController {
                 // GET THE SELECTED LIST
                 this.model.loadList(id);
             }
-        }
+        };
         // HANDLES DELETING A PLAYLIST
         document.getElementById("delete-list-button-" + id).onmousedown = (event) => {
             // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
@@ -192,7 +201,7 @@ export default class PlaylisterController {
             // OPEN UP THE DIALOG
             deleteListModal.classList.add("is-visible");
             this.model.toggleConfirmDialogOpen();
-        }
+        };
         // HANDLES DUPLICATING A PLAYLIST
         document.getElementById("duplicate-list-button-" + id).onmousedown = (event) => {
             // DON'T PROPOGATE THIS INTERACTION TO LOWER-LEVEL CONTROLS
@@ -203,48 +212,55 @@ export default class PlaylisterController {
             let listName = listToDuplicate.getName();
             let listSongs = listToDuplicate.getSongs();
 
-            let dupedList = this.model.addNewList(listName + " (Copy)", listSongs);
+            let dupedList = this.model.addNewList(
+                listName + " (Copy)",
+                listSongs
+            );
 
             // SELECT THE NEW DUPED LIST
             this.model.unselectCurrentList();
             this.model.loadList(dupedList.getId());
-        }
+        };
         // FOR RENAMING THE LIST NAME
         document.getElementById("playlist-card-" + id).ondblclick = (event) => {
-            let text = document.getElementById("playlist-card-text-" + id)
+            let text = document.getElementById("playlist-card-text-" + id);
             // CLEAR THE TEXT
             text.innerHTML = "";
 
             // SHOW THE TEXT FIELD
             this.model.setListNameBeingChanged(true, id);
-            let textInput = document.getElementById("playlist-card-text-input-" + id);
+            let textInput = document.getElementById(
+                "playlist-card-text-input-" + id
+            );
             textInput.focus();
             textInput.value = this.model.getPlaylist(id).name;
-        }
+        };
 
         // SPECIFY HANDLERS FOR THE TEXT FIELD
-        let textInput = document.getElementById("playlist-card-text-input-" + id);
+        let textInput = document.getElementById(
+            "playlist-card-text-input-" + id
+        );
         textInput.ondblclick = (event) => {
             this.ignoreParentClick(event);
-        }
+        };
         textInput.onkeydown = (event) => {
-            if (event.key === 'Enter') {
+            if (event.key === "Enter") {
                 this.model.setListNameBeingChanged(false, id);
-                this.model.renameCurrentList(event.target.value);//, id);
+                this.model.renameCurrentList(event.target.value); //, id);
             }
-        }
+        };
         textInput.onblur = (event) => {
             this.model.setListNameBeingChanged(false, id);
-            this.model.renameCurrentList(event.target.value);//, id);
-        }
+            this.model.renameCurrentList(event.target.value); //, id);
+        };
     }
 
     /**
-     * This function specifies event handling for interactions with the playlist 
-     * song cards. Note that we say these are for dynamic controls because the cards 
-     * in the playlist are not known, it can be any number of songs. It's as many 
+     * This function specifies event handling for interactions with the playlist
+     * song cards. Note that we say these are for dynamic controls because the cards
+     * in the playlist are not known, it can be any number of songs. It's as many
      * cards as there are songs in the playlist, and users can add and remove songs.
-    */
+     */
     registerSongCardHandlers() {
         // SETUP THE HANDLERS FOR ALL SONG CARDS, WHICH ALL GET DONE
         // AT ONCE EVERY TIME DATA CHANGES, SINCE IT GETS REBUILT EACH TIME
@@ -258,15 +274,24 @@ export default class PlaylisterController {
                 this.ignoreParentClick(event);
 
                 // WE NEED TO RECORD THE INDEX FOR THE MODAL
-                let songIndex = Number.parseInt(event.currentTarget.id.split("-")[2]) - 1;
+                let songIndex =
+                    Number.parseInt(event.currentTarget.id.split("-")[2]) - 1;
                 this.model.setEditSongIndex(songIndex);
                 let song = this.model.getSong(songIndex);
 
                 // LOAD THE SONG DATA INTO THE MODAL
-                document.getElementById("edit-song-modal-title-textfield").value = song.title;
-                document.getElementById("edit-song-modal-artist-textfield").value = song.artist;
-                document.getElementById("edit-song-modal-year-textfield").value = song.year;
-                document.getElementById("edit-song-modal-youTubeId-textfield").value = song.youTubeId;
+                document.getElementById(
+                    "edit-song-modal-title-textfield"
+                ).value = song.title;
+                document.getElementById(
+                    "edit-song-modal-artist-textfield"
+                ).value = song.artist;
+                document.getElementById(
+                    "edit-song-modal-year-textfield"
+                ).value = song.year;
+                document.getElementById(
+                    "edit-song-modal-youTubeId-textfield"
+                ).value = song.youTubeId;
 
                 // OPEN UP THE MODAL
                 let editSongModal = document.getElementById("edit-song-modal");
@@ -274,7 +299,7 @@ export default class PlaylisterController {
 
                 // IGNORE ALL NON-MODAL EVENTS
                 this.model.toggleConfirmDialogOpen();
-            }
+            };
 
             // USER WANTS TO REMOVE A SONG FROM THE PLAYLIST
             let removeSongButton = document.getElementById("remove-song-" + i);
@@ -283,7 +308,7 @@ export default class PlaylisterController {
                 this.ignoreParentClick(event);
 
                 // RECORD WHICH SONG SO THE MODAL KNOWS AND UPDATE THE MODAL TEXT
-                let songIndex = Number.parseInt(event.target.id.split("-")[2]);  
+                let songIndex = Number.parseInt(event.target.id.split("-")[2]);
                 this.model.setRemoveSongId(songIndex);
 
                 let songName = this.model.getSong(songIndex).title;
@@ -292,54 +317,60 @@ export default class PlaylisterController {
                 removeSpan.innerHTML = "";
                 removeSpan.appendChild(document.createTextNode(songName));
 
-                let removeSongModal = document.getElementById("remove-song-modal");
+                let removeSongModal =
+                    document.getElementById("remove-song-modal");
                 removeSongModal.classList.add("is-visible");
                 this.model.toggleConfirmDialogOpen();
-            }
+            };
 
             // NOW SETUP ALL CARD DRAGGING HANDLERS AS THE USER MAY WISH TO CHANGE
             // THE ORDER OF SONGS IN THE PLAYLIST
 
             // MAKE EACH CARD DRAGGABLE
-            card.setAttribute('draggable', 'true')
+            card.setAttribute("draggable", "true");
 
             // WHEN DRAGGING STARTS RECORD THE INDEX
             card.ondragstart = (event) => {
                 card.classList.add("is-dragging");
                 event.dataTransfer.setData("from-id", i);
-            }
+            };
 
             // WE ONLY WANT OUR CODE, NO DEFAULT BEHAVIOR FOR DRAGGING
             card.ondragover = (event) => {
                 event.preventDefault();
-            }
+            };
 
             // STOP THE DRAGGING LOOK WHEN IT'S NOT DRAGGING
             card.ondragend = (event) => {
                 card.classList.remove("is-dragging");
-            }
+            };
 
             // WHEN AN ITEM IS RELEASED WE NEED TO MOVE THE CARD
             card.ondrop = (event) => {
                 event.preventDefault();
                 // GET THE INDICES OF WHERE THE CARD IS BRING DRAGGED FROM AND TO
-                let fromIndex = Number.parseInt(event.dataTransfer.getData("from-id"));
-                let toIndex = Number.parseInt(event.target.id.split("-")[2]) - 1;
+                let fromIndex = Number.parseInt(
+                    event.dataTransfer.getData("from-id")
+                );
+                let toIndex =
+                    Number.parseInt(event.target.id.split("-")[2]) - 1;
 
                 // ONLY ADD A TRANSACTION IF THEY ARE NOT THE SAME
                 // AND BOTH INDICES ARE VALID
-                if ((fromIndex !== toIndex)
-                    && !isNaN(fromIndex)
-                    && !isNaN(toIndex)) {
+                if (
+                    fromIndex !== toIndex &&
+                    !isNaN(fromIndex) &&
+                    !isNaN(toIndex)
+                ) {
                     this.model.addTransactionToMoveSong(fromIndex, toIndex);
                 }
-            }
+            };
         }
     }
 
     /**
-     * We are using an MVC-type approach, so this controller class will respond by 
-     * updating the application data, which is managed by the model class. So, this 
+     * We are using an MVC-type approach, so this controller class will respond by
+     * updating the application data, which is managed by the model class. So, this
      * function registers the model object with this controller.
      */
     setModel(initModel) {

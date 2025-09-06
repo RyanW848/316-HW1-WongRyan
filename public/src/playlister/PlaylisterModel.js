@@ -2,6 +2,7 @@ import { jsTPS } from '../jstps/index.js'
 import Playlist from "./Playlist.js";
 import PlaylistSongPrototype from './PlaylistSongPrototype.js';
 import CreateSong_Transaction from "./transactions/CreateSong_Transaction.js";
+import EditSong_Transaction from "./transactions/EditSong_Transaction.js";
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
 import RemoveSong_Transaction from "./transactions/RemoveSong_Transaction.js";
 import PlaylistBuilder from './PlaylistBuilder.js';
@@ -54,6 +55,7 @@ export default class PlaylisterModel {
         this.playlists.push(listToAdd);
         this.sortLists();
         this.view.refreshPlaylistCards(this.playlists);
+        this.saveLists();
         return listToAdd;
     }
 
@@ -79,6 +81,13 @@ export default class PlaylisterModel {
         let song = new PlaylistSongPrototype("Untitled", "???", 2000, "dQw4w9WgXcQ");
         let appendIndex = this.getPlaylistSize();
         let transaction = new CreateSong_Transaction(this, appendIndex, song);
+        this.tps.processTransaction(transaction);
+        this.view.updateToolbarButtons(this.hasCurrentList(), 
+                            this.confirmDialogOpen, this.tps.hasTransactionToDo(), this.tps.hasTransactionToUndo());
+    }
+
+    addTransactionToEditSong(index, oldData, newData) {
+        let transaction = new EditSong_Transaction(this, index, oldData, newData);
         this.tps.processTransaction(transaction);
         this.view.updateToolbarButtons(this.hasCurrentList(), 
                             this.confirmDialogOpen, this.tps.hasTransactionToDo(), this.tps.hasTransactionToUndo());
@@ -143,6 +152,18 @@ export default class PlaylisterModel {
         }
         this.saveLists();
     }
+
+    editSong(index, data) {
+        let song = this.getSong(index);
+
+        song.title = data.title;
+        song.artist = data.artist;
+        song.year = data.year;
+        song.youTubeId = data.youTubeId;
+
+        this.view.refreshSongCards(this.currentList);
+        this.saveLists();
+    };
 
     /**
      * Accessor method for getting the index of the song being edited. This represents

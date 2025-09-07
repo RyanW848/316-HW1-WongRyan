@@ -436,6 +436,10 @@ export default class PlaylisterModel {
         this.view.refreshSongCards(this.currentList);
         this.view.highlightList(listToSelect.id);
         this.view.updateStatusBar(this.hasCurrentList(), listToSelect.name);
+
+        this.view.disableButton("add-playlist-button");
+        this.view.enableButton("add-song-button");
+        this.view.enableButton("close-button");
     }
 
     /**
@@ -544,6 +548,10 @@ export default class PlaylisterModel {
             this.tps.clearAllTransactions();
             this.view.updateToolbarButtons(this.hasCurrentList(), 
                             this.confirmDialogOpen, this.tps.hasTransactionToDo(), this.tps.hasTransactionToUndo());
+
+                            this.view.enableButton("add-playlist-button");
+                            this.view.disableButton("add-song-button");
+                            this.view.disableButton("close-button");
         }
     }
 }

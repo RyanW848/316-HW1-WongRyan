@@ -147,6 +147,7 @@ export default class PlaylisterModel {
             this.view.clearWorkspace();
             this.tps.clearAllTransactions();
             this.view.updateStatusBar(false);
+
         } else if (this.hasCurrentList()) {
             this.view.highlightList(this.currentList.id);
         }
@@ -337,7 +338,7 @@ export default class PlaylisterModel {
                     let artist = songData.artist;
                     let youTubeId = songData.youTubeId;
                     let year = songData.year;
-                    songs[j] = new PlaylistSongPrototype(title, artist, youTubeId, year);
+                    songs[j] = new PlaylistSongPrototype(title, artist, year, youTubeId);
                 }
                 this.addNewList(listData.name, songs);
             }
@@ -549,9 +550,9 @@ export default class PlaylisterModel {
             this.view.updateToolbarButtons(this.hasCurrentList(), 
                             this.confirmDialogOpen, this.tps.hasTransactionToDo(), this.tps.hasTransactionToUndo());
 
-                            this.view.enableButton("add-playlist-button");
-                            this.view.disableButton("add-song-button");
-                            this.view.disableButton("close-button");
+            this.view.enableButton("add-playlist-button");
+            this.view.disableButton("add-song-button");
+            this.view.disableButton("close-button");
         }
     }
 }

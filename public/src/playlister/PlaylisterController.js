@@ -124,6 +124,10 @@ export default class PlaylisterController {
             // ALLOW OTHER INTERACTIONS
             this.model.toggleConfirmDialogOpen();
 
+            this.model.view.enableButton("add-playlist-button");
+            this.model.view.disableButton("add-song-button");
+            this.model.view.disableButton("close-button");
+
             // CLOSE THE MODAL
             let deleteListModal = document.getElementById("delete-list-modal");
             deleteListModal.classList.remove("is-visible");

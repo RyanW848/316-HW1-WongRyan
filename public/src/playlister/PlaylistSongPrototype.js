@@ -30,7 +30,7 @@ export default class PlaylistSongPrototype {
      * @returns A deep copy of this object.
      */
     clone() {
-        let song = new PlaylistSongPrototype(this.title, this.artist, this.youTubeId, this.year);
+        let song = new PlaylistSongPrototype(this.title, this.artist, this.year, this.youTubeId);
         return song;
     }                    
 }
